@@ -1,0 +1,133 @@
+CISC/CMPE 457 Assignment 1
+Due October 10 at noon
+
+You may work alone or in pairs.  Do not show any of your code to
+anybody outside your group.  If you keep code on github, keep it
+private so that others cannot see it.
+
+You are to modify an image editor to
+
+  - use backward projection
+  - modify pixel intensities with windowing
+  - apply local histogram equalization
+
+  See "YOUR CODE HERE" in editor.cpp.
+
+  Change only the code in editor.cpp.
+
+
+How to run the code
+
+  On Linux or MacOS, use a terminal window and go in to the 'linux' or
+  'macos' directory, then execute
+
+    make
+    ./editor ../images/pup.png
+
+  or
+  
+    ./editor ../images/strawberries.png
+
+  You can try other images in the 'images' directory, especially the
+  flower and parrot, which have transparent pixels.
+
+  On Windows with Visual Studio 2019, OPEN THE ASSIGNMENT BY
+  DOUBLE-CLICKING ON 'editor.vcxproj' IN THE 'windows' FOLDER.
+
+  DO NOT OPEN VISUAL STUDIO FIRST.  VISUAL STUDIO SHOULD BE CLOSED
+  WHEN YOU DOUBLE-CLICK ON 'editor.vcxproj'.  DO NOT USE VISUAL STUDIO
+  *CODE*.
+
+  In Visual Studio, put the image filename in the project properties
+  as a command-line argument in the Debugging section.
+
+
+In the window
+
+  Select the editing mode by pressing
+
+    S - to scale
+    I - to change intensity
+
+  Select the projection mode by pressing
+  
+    F - for forward projection
+    B - for backward projection
+
+  Apply local histogram equalization by pressing
+
+    E - apply equalization
+    + - increase equalization radius
+    - - decrease equalization radius
+
+  And you can press
+
+    Z - reset everything ("zero")
+
+  After selecting an editing mode, left click the mouse and drag it.
+
+    For scaling, moving the mouse toward or away from the image centre
+    will scale the image smaller or larger, respectively.
+
+    For intensity changes, moving the mouse left/right changes the
+    intercept of the intensity transform function, but in an intuitive
+    way described in the code comments.  Moving the mouse up/down
+    changes the slope of the transform.
+    
+Coding
+
+  First get backword projection working.  Test it with scaling.
+
+  Then get intensity changes working.  This involves (a) editing the
+  intensity transform in 'mouseMotion()' and (b) applying the
+  transform in 'applyIntensityTransform()'.
+
+     The intensity transform has two parts: an accumulated transform
+     from *past* mouse motion, and a recent transform from *current*
+     mouse motion, while dragging the mouse.  Once the mouse button is
+     released, the current transform is combined with the previously
+     accumulated transform to get a *new* accumulated transform in
+     'stopMouseMotion()'.
+
+     The slope of the intensity transform function is
+
+        recentIntensityScale * accumulatedIntensityScale
+
+     and the intercept of the intensity transform function is
+
+        recentIntensityBias + accumulatedIntensityBias
+
+     While the mouse is being dragged, your code in 'mouseMotion()'
+     should be updating recentIntensityScale and recentIntensityBias
+     based on the mouse position with respect to its position when it
+     started dragging.  Your code never changes the accumulated
+     values.  Those are changed in 'stopMouseMotion()' with the
+     existing code.
+
+     The intensity transform is
+     
+        Y' = Y * slope + intercept
+
+     In the 'applyIntensityTransform()' function, you will have to
+     convert RGB to YUV, then change Y to Y' as above, then convert
+     back to RGB.
+
+  Finally, implement local histogram equalization in 'histogramEqualization()'.
+
+To Hand In
+
+  Make a directory called 'a1'.  In that directory, put exactly three
+  files:
+
+    - editor.cpp
+    - editor.h
+    - README.txt     with your name(s) and netID(s) and any comment you
+                     have for the TA.
+
+  Create a zip archive a1.zip of the a1 directory and submit it to OnQ.
+
+  You will lose marks if you do not follow these submission
+  instructions exactly.  You will lose marks if you are in a group of
+  two and each person submits the assignment.  These penalties exist
+  because not following the instructions makes unnecessary work for
+  the TAs.
